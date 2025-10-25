@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 
-import { solanaConnection } from '@/lib/blockchain/solana'
+import { getSolanaMonitor } from '@/lib/monitors/solana-monitor'
 import { prisma } from '@/lib/database/client'
 
 /**
@@ -11,39 +11,45 @@ import { prisma } from '@/lib/database/client'
  */
 
 async function main() {
-  console.log('Starting Solana chain collector...')
+  console.log('===========================================')
+  console.log('  Solana Chain x402 Protocol Monitor')
+  console.log('===========================================\n')
 
-  // Verify connection
-  try {
-    const version = await solanaConnection.getVersion()
-    console.log(`Connected to Solana. Version: ${version['solana-core']}`)
+  const monitor = getSolanaMonitor()
 
-    const slot = await solanaConnection.getSlot()
-    console.log(`Current slot: ${slot}`)
-  } catch (error) {
-    console.error('Failed to connect to Solana:', error)
-    process.exit(1)
-  }
-
-  // TODO: Implement protocol detection logic
-  // This will be expanded to:
-  // 1. Monitor for x402 protocol deployments
-  // 2. Track protocol interactions
-  // 3. Store data for analysis
-
-  console.log('Solana collector initialized. Monitoring for protocols...')
-
-  // Keep the process running
+  // Handle graceful shutdown
   process.on('SIGINT', async () => {
-    console.log('Shutting down Solana collector...')
+    console.log('\n\nShutting down Solana monitor...')
+    monitor.stop()
     await prisma.$disconnect()
+    console.log('Solana monitor stopped. Goodbye!')
     process.exit(0)
   })
+
+  process.on('SIGTERM', async () => {
+    console.log('\n\nShutting down Solana monitor...')
+    monitor.stop()
+    await prisma.$disconnect()
+    console.log('Solana monitor stopped. Goodbye!')
+    process.exit(0)
+  })
+
+  // Start monitoring
+  try {
+    await monitor.start()
+  } catch (error) {
+    console.error('Fatal error in Solana monitor:', error)
+    await prisma.$disconnect()
+    process.exit(1)
+  }
 }
 
 // Only run if this is the main module
 if (require.main === module) {
-  main().catch(console.error)
+  main().catch((error) => {
+    console.error('Unhandled error:', error)
+    process.exit(1)
+  })
 }
 
 export { main }
