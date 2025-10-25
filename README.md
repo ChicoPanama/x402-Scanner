@@ -8,7 +8,9 @@
 
 ## 🚀 Quick Start
 
-**New to this project?** → **[Read GETTING-STARTED.md](GETTING-STARTED.md)** for a step-by-step setup guide (takes ~10 minutes)
+**👉 NEW USER? [START HERE →](START-HERE.md)** Complete setup guide (15 minutes)
+
+**Alternative:** [GETTING-STARTED.md](GETTING-STARTED.md) for detailed troubleshooting
 
 ```bash
 # 1. Install & Setup
