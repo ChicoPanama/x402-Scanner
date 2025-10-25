@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 
-import { baseClient, baseWsClient } from '@/lib/blockchain/base'
+import { getBaseMonitor } from '@/lib/monitors/base-monitor'
 import { prisma } from '@/lib/database/client'
 
 /**
@@ -11,36 +11,45 @@ import { prisma } from '@/lib/database/client'
  */
 
 async function main() {
-  console.log('Starting Base chain collector...')
+  console.log('===========================================')
+  console.log('  Base Chain x402 Protocol Monitor')
+  console.log('===========================================\n')
 
-  // Verify connection
-  try {
-    const blockNumber = await baseClient.getBlockNumber()
-    console.log(`Connected to Base. Current block: ${blockNumber}`)
-  } catch (error) {
-    console.error('Failed to connect to Base:', error)
-    process.exit(1)
-  }
+  const monitor = getBaseMonitor()
 
-  // TODO: Implement protocol detection logic
-  // This will be expanded to:
-  // 1. Monitor for x402 protocol deployments
-  // 2. Track protocol interactions
-  // 3. Store data for analysis
-
-  console.log('Base collector initialized. Monitoring for protocols...')
-
-  // Keep the process running
+  // Handle graceful shutdown
   process.on('SIGINT', async () => {
-    console.log('Shutting down Base collector...')
+    console.log('\n\nShutting down Base monitor...')
+    monitor.stop()
     await prisma.$disconnect()
+    console.log('Base monitor stopped. Goodbye!')
     process.exit(0)
   })
+
+  process.on('SIGTERM', async () => {
+    console.log('\n\nShutting down Base monitor...')
+    monitor.stop()
+    await prisma.$disconnect()
+    console.log('Base monitor stopped. Goodbye!')
+    process.exit(0)
+  })
+
+  // Start monitoring
+  try {
+    await monitor.start()
+  } catch (error) {
+    console.error('Fatal error in Base monitor:', error)
+    await prisma.$disconnect()
+    process.exit(1)
+  }
 }
 
 // Only run if this is the main module
 if (require.main === module) {
-  main().catch(console.error)
+  main().catch((error) => {
+    console.error('Unhandled error:', error)
+    process.exit(1)
+  })
 }
 
 export { main }

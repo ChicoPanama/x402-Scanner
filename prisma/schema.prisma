@@ -31,8 +31,13 @@ model Protocol {
   deploymentTxHash String?
   deployer        String?
   createdAt       DateTime        @default(now())
-  firstSeenBlock  BigInt
+  firstSeenBlock  BigInt?
   status          ProtocolStatus  @default(ACTIVE)
+
+  // Quick stats (denormalized for performance)
+  totalTransactions Int           @default(0)
+  totalVolume       String        @default("0")
+  lastActivityAt    DateTime?
 
   // Metadata
   name            String?

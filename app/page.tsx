@@ -1,4 +1,22 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+
 export default function Home() {
+  const [stats, setStats] = useState<any>(null)
+
+  useEffect(() => {
+    fetch('/api/stats')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) setStats(data.data)
+      })
+      .catch(console.error)
+  }, [])
+
+  const baseCount = stats?.chainBreakdown?.find((c: any) => c.chain === 'BASE')?.count || 0
+  const solanaCount = stats?.chainBreakdown?.find((c: any) => c.chain === 'SOLANA')?.count || 0
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-12">
@@ -26,7 +44,7 @@ export default function Home() {
               Active
             </span>
           </div>
-          <p className="text-3xl font-bold text-gray-900 mb-2">-</p>
+          <p className="text-3xl font-bold text-gray-900 mb-2">{baseCount}</p>
           <p className="text-sm text-gray-600">Protocols Tracked</p>
         </div>
 
@@ -37,7 +55,7 @@ export default function Home() {
               Active
             </span>
           </div>
-          <p className="text-3xl font-bold text-gray-900 mb-2">-</p>
+          <p className="text-3xl font-bold text-gray-900 mb-2">{solanaCount}</p>
           <p className="text-sm text-gray-600">Protocols Tracked</p>
         </div>
 
@@ -48,7 +66,7 @@ export default function Home() {
               Live
             </span>
           </div>
-          <p className="text-3xl font-bold text-gray-900 mb-2">-</p>
+          <p className="text-3xl font-bold text-gray-900 mb-2">{stats?.totalTransactions || 0}</p>
           <p className="text-sm text-gray-600">Data Points</p>
         </div>
       </div>
