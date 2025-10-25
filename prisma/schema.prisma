@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Token {
+  id            String   @id @default(cuid())
+  address       String   @unique
+  name          String?
+  symbol        String?
+  decimals      Int?
+  network       Network
+  mintUrl       String?
+  createdAt     DateTime @default(now())
+  firstSeenAt   DateTime @default(now())
+  lastScannedAt DateTime @updatedAt
+
+  metadata      Json?
+  isX402        Boolean  @default(false)
+  verified      Boolean  @default(false)
+
+  transactions  Transaction[]
+  analytics     TokenAnalytics?
+
+  @@index([network])
+  @@index([createdAt])
+  @@index([isX402])
+}
+
+model AIAgent {
+  id            String   @id @default(cuid())
+  address       String   @unique
+  name          String?
+  description   String?
+  network       Network
+  tokenAddress  String?
+  website       String?
+  twitter       String?
+  telegram      String?
+
+  createdAt     DateTime @default(now())
+  firstSeenAt   DateTime @default(now())
+  lastScannedAt DateTime @updatedAt
+
+  isActive      Boolean  @default(true)
+  verified      Boolean  @default(false)
+
+  metadata      Json?
+  patterns      AgentPattern[]
+
+  @@index([network])
+  @@index([isActive])
+}
+
+model Transaction {
+  id            String   @id @default(cuid())
+  hash          String   @unique
+  tokenId       String
+  token         Token    @relation(fields: [tokenId], references: [id])
+
+  from          String
+  to            String
+  value         String
+  timestamp     DateTime
+  network       Network
+  blockNumber   BigInt
+
+  type          TransactionType
+  metadata      Json?
+
+  @@index([tokenId])
+  @@index([timestamp])
+  @@index([network])
+}
+
+model TokenAnalytics {
+  id              String   @id @default(cuid())
+  tokenId         String   @unique
+  token           Token    @relation(fields: [tokenId], references: [id])
+
+  holders         Int      @default(0)
+  transactions24h Int      @default(0)
+  volume24h       String   @default("0")
+  priceChange24h  Float    @default(0)
+
+  suspiciousScore Float    @default(0)
+  riskLevel       RiskLevel @default(LOW)
+
+  updatedAt       DateTime @updatedAt
+
+  @@index([riskLevel])
+  @@index([suspiciousScore])
+}
+
+model AgentPattern {
+  id          String   @id @default(cuid())
+  agentId     String
+  agent       AIAgent  @relation(fields: [agentId], references: [id])
+
+  patternType String
+  value       String
+  confidence  Float
+
+  detectedAt  DateTime @default(now())
+
+  @@index([agentId])
+  @@index([patternType])
+}
+
+model ScanLog {
+  id        String   @id @default(cuid())
+  network   Network
+  blockNumber BigInt
+
+  tokensFound   Int @default(0)
+  agentsFound   Int @default(0)
+
+  startTime DateTime
+  endTime   DateTime
+  status    ScanStatus
+
+  error     String?
+  metadata  Json?
+
+  @@index([network])
+  @@index([startTime])
+}
+
+enum Network {
+  BASE
+  SOLANA
+}
+
+enum TransactionType {
+  TRANSFER
+  MINT
+  BURN
+  SWAP
+  OTHER
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ScanStatus {
+  SUCCESS
+  FAILED
+  PARTIAL
+}

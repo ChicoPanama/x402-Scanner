@@ -1,0 +1,88 @@
+{
+  "name": "x402-scanner",
+  "version": "1.0.0",
+  "description": "Real-time blockchain intelligence system for x402 protocol tokens and AI agents",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "jest",
+    "test:unit": "jest --testPathPattern=unit",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:e2e": "playwright test",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "scan:base": "tsx services/scanner/base-scanner.ts",
+    "scan:solana": "tsx services/scanner/solana-scanner.ts",
+    "scan:all": "concurrently \"npm run scan:base\" \"npm run scan:solana\"",
+    "analyze": "tsx services/analytics/pattern-analyzer.ts",
+    "format": "prettier --write .",
+    "prepare": "husky install"
+  },
+  "keywords": [
+    "x402",
+    "blockchain",
+    "scanner",
+    "base",
+    "solana",
+    "web3",
+    "crypto",
+    "defi",
+    "mint"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^5.7.1",
+    "@solana/web3.js": "^1.87.6",
+    "axios": "^1.6.2",
+    "cheerio": "^1.0.0-rc.12",
+    "date-fns": "^3.0.6",
+    "lucide-react": "^0.300.0",
+    "next": "^14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "recharts": "^2.10.3",
+    "redis": "^4.6.11",
+    "viem": "^2.0.0",
+    "ws": "^8.16.0",
+    "zod": "^3.22.4",
+    "zustand": "^4.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18.2.18",
+    "@types/ws": "^8.5.10",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
+    "autoprefixer": "^10.4.16",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.0.4",
+    "husky": "^8.0.3",
+    "jest": "^29.7.0",
+    "postcss": "^8.4.32",
+    "prettier": "^3.1.1",
+    "prisma": "^5.7.1",
+    "tailwindcss": "^3.4.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/x402-scanner.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/x402-scanner/issues"
+  },
+  "homepage": "https://github.com/yourusername/x402-scanner#readme"
+}
