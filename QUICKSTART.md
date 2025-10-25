@@ -2,6 +2,16 @@
 
 This guide will help you get the x402 Protocol Observatory up and running in minutes.
 
+## Overview: Hybrid Monitoring System
+
+The Observatory uses a **hybrid approach** to track x402 protocols:
+
+1. **x402scan.com Integration**: Pulls existing protocols and historical data
+2. **Real-time Blockchain Monitoring**: Watches Base and Solana for new deployments
+3. **Periodic Sync**: Combines both sources for comprehensive coverage
+
+This means you'll have **immediate access to existing x402 protocols** plus **real-time detection** of new ones!
+
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
@@ -100,37 +110,46 @@ npx prisma studio
 
 ## Step 5: Start the Application
 
-You'll need **3 terminal windows** for a complete setup:
+### Option A: Hybrid Monitor (Recommended)
 
-### Terminal 1: Web Dashboard
+Use the hybrid monitor for the best experience - it combines x402scan data with blockchain monitoring:
 
+**Terminal 1: Web Dashboard**
 ```bash
 npm run dev
 ```
 
-The dashboard will be available at: **http://localhost:3000**
+**Terminal 2: Hybrid Monitor**
+```bash
+npm run collect:hybrid
+```
 
-### Terminal 2: Base Chain Monitor
+The hybrid monitor will:
+1. Import existing protocols from x402scan.com
+2. Start Base blockchain monitoring
+3. Start Solana blockchain monitoring
+4. Sync periodically with x402scan for updates
 
+### Option B: Individual Monitors
+
+Or run monitors separately for more control:
+
+**Terminal 1: Web Dashboard**
+```bash
+npm run dev
+```
+
+**Terminal 2: Base Chain Monitor**
 ```bash
 npm run collect:base
 ```
 
-This monitor will:
-- Connect to Base blockchain
-- Scan new blocks for x402 protocols
-- Store detected protocols in database
-
-### Terminal 3: Solana Chain Monitor
-
+**Terminal 3: Solana Chain Monitor**
 ```bash
 npm run collect:solana
 ```
 
-This monitor will:
-- Connect to Solana blockchain
-- Scan new slots for x402 protocols
-- Store detected protocols in database
+**Dashboard URL**: http://localhost:3000
 
 ## Step 6: Verify It's Working
 
