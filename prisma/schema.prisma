@@ -1,0 +1,223 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Blockchain networks supported
+enum Chain {
+  BASE
+  SOLANA
+}
+
+// Protocol deployment status
+enum ProtocolStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+// Main protocol tracking model
+model Protocol {
+  id              String          @id @default(cuid())
+  chain           Chain
+  address         String
+  deploymentTxHash String?
+  deployer        String?
+  createdAt       DateTime        @default(now())
+  firstSeenBlock  BigInt
+  status          ProtocolStatus  @default(ACTIVE)
+
+  // Metadata
+  name            String?
+  symbol          String?
+  metadata        Json?
+
+  // Relationships
+  transactions    Transaction[]
+  analytics       ProtocolAnalytics[]
+  interactions    Interaction[]
+
+  // Indexes
+  @@unique([chain, address])
+  @@index([chain])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// Transaction tracking
+model Transaction {
+  id              String    @id @default(cuid())
+  chain           Chain
+  hash            String
+  blockNumber     BigInt
+  blockTimestamp  DateTime
+
+  // Transaction details
+  from            String
+  to              String?
+  value           String?
+  gasUsed         String?
+  gasPrice        String?
+
+  // Protocol relationship
+  protocolId      String
+  protocol        Protocol  @relation(fields: [protocolId], references: [id])
+
+  // Additional data
+  methodSignature String?
+  decodedData     Json?
+
+  createdAt       DateTime  @default(now())
+
+  @@unique([chain, hash])
+  @@index([chain, blockNumber])
+  @@index([protocolId])
+  @@index([blockTimestamp])
+}
+
+// User interactions with protocols
+model Interaction {
+  id              String    @id @default(cuid())
+  chain           Chain
+  userAddress     String
+  protocolId      String
+  protocol        Protocol  @relation(fields: [protocolId], references: [id])
+
+  // Interaction details
+  interactionType String
+  timestamp       DateTime
+  transactionHash String
+  value           String?
+  metadata        Json?
+
+  createdAt       DateTime  @default(now())
+
+  @@index([chain, userAddress])
+  @@index([protocolId])
+  @@index([timestamp])
+}
+
+// Aggregated analytics per protocol
+model ProtocolAnalytics {
+  id                    String    @id @default(cuid())
+  protocolId            String
+  protocol              Protocol  @relation(fields: [protocolId], references: [id])
+
+  // Time period
+  periodStart           DateTime
+  periodEnd             DateTime
+
+  // Metrics
+  transactionCount      Int       @default(0)
+  uniqueUsers           Int       @default(0)
+  totalVolume           String    @default("0")
+  averageGasUsed        String?
+
+  // Calculated metrics
+  adoptionRate          Float?
+  growthRate            Float?
+  activityScore         Float?
+
+  // Additional analytics data
+  metrics               Json?
+
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([protocolId])
+  @@index([periodStart])
+  @@unique([protocolId, periodStart, periodEnd])
+}
+
+// System-wide statistics
+model SystemStats {
+  id                String    @id @default(cuid())
+  chain             Chain
+
+  // Period
+  timestamp         DateTime  @unique
+
+  // Counts
+  totalProtocols    Int       @default(0)
+  activeProtocols   Int       @default(0)
+  totalTransactions Int       @default(0)
+  totalUsers        Int       @default(0)
+
+  // Volume metrics
+  totalVolume       String    @default("0")
+
+  // Network metrics
+  averageBlockTime  Float?
+  networkHealth     Float?
+
+  // Additional stats
+  statistics        Json?
+
+  createdAt         DateTime  @default(now())
+
+  @@index([chain, timestamp])
+}
+
+// Research exports and datasets
+model ResearchExport {
+  id                String    @id @default(cuid())
+
+  // Export metadata
+  title             String
+  description       String?
+  exportType        String
+
+  // Date range
+  startDate         DateTime
+  endDate           DateTime
+
+  // Filters applied
+  chains            Chain[]
+  filters           Json?
+
+  // Export details
+  recordCount       Int
+  fileSize          BigInt?
+  fileUrl           String?
+
+  // Access control
+  isPublic          Boolean   @default(true)
+  createdBy         String?
+
+  createdAt         DateTime  @default(now())
+  expiresAt         DateTime?
+
+  @@index([createdAt])
+  @@index([exportType])
+}
+
+// Webhook subscriptions for real-time data
+model Webhook {
+  id                String    @id @default(cuid())
+
+  // Webhook details
+  url               String
+  secret            String?
+
+  // Subscription filters
+  chains            Chain[]
+  eventTypes        String[]
+  filters           Json?
+
+  // Status
+  isActive          Boolean   @default(true)
+  lastTriggered     DateTime?
+  failureCount      Int       @default(0)
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([isActive])
+}
