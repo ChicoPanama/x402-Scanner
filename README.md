@@ -1,2 +1,280 @@
-# x402-Scanner
-Build a comprehensive blockchain intelligence system that detects new x402 protocol tokens and AI agents in real-time on Base (primary) and Solana (secondary), traces mint URLs automatically, and provides instant access to new opportunities before they're widely known.
+# x402 Protocol Observatory - Blockchain Research Platform
+
+![Research](https://img.shields.io/badge/Research-Platform-blue)
+![Base](https://img.shields.io/badge/Base-Chain-purple)
+![Solana](https://img.shields.io/badge/Solana-Chain-green)
+![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+
+## 🔬 Overview
+
+The x402 Protocol Observatory is a blockchain research platform designed for monitoring and analyzing x402 protocol deployments across Base and Solana networks. This system aggregates publicly available blockchain data to provide researchers, academics, and market analysts with comprehensive insights into protocol dynamics and ecosystem development.
+
+### Research Focus
+
+- **Protocol Analysis**: Study x402 protocol implementations and patterns
+- **Market Research**: Analyze adoption rates and usage metrics
+- **Academic Studies**: Build datasets for blockchain research
+- **Educational Resources**: Understand decentralized protocol mechanics
+
+## 📊 Core Features
+
+### Data Collection & Analysis
+- **Protocol Monitoring**: Track x402 deployments in real-time
+- **Transaction Analysis**: Aggregate and analyze protocol interactions
+- **Historical Data**: Build comprehensive datasets for research
+- **Pattern Recognition**: Identify deployment and usage patterns
+
+### Research Tools
+- **Statistical Analysis**: Quantitative metrics on protocol activity
+- **Comparative Studies**: Analyze different protocol implementations
+- **Network Visualization**: Graph protocol relationships and interactions
+- **Export Capabilities**: Download datasets for external analysis
+
+### Transparency Features
+- **Public Dashboard**: Open access to protocol metrics
+- **API Access**: Programmatic access to research data
+- **Documentation**: Comprehensive methodology documentation
+- **Open Source**: Transparent codebase and algorithms
+
+## 🛠️ Technical Stack
+
+- **Frontend**: Next.js 14, TypeScript, TailwindCSS
+- **Backend**: Node.js, Prisma ORM
+- **Database**: PostgreSQL (primary), Redis (caching)
+- **Blockchain**: Viem (Base), @solana/web3.js (Solana)
+- **Analytics**: D3.js, Recharts for visualization
+
+## 📦 Installation
+
+### Prerequisites
+
+- Node.js 20.0+
+- PostgreSQL 14+
+- Redis 7+ (optional, for caching)
+- RPC access to Base and Solana networks
+
+### Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/ChicoPanama/x402-Scanner.git
+cd x402-Scanner
+
+# Install dependencies
+npm install
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your RPC endpoints
+
+# Setup database
+npx prisma generate
+npx prisma db push
+
+# Start development server
+npm run dev
+
+# Start data collection (separate terminal)
+npm run collect:base    # Base chain collector
+npm run collect:solana  # Solana collector
+```
+
+## 🔧 Configuration
+
+### Environment Variables
+
+```bash
+# Database Configuration
+DATABASE_URL="postgresql://user:password@localhost:5432/x402observatory"
+REDIS_URL="redis://localhost:6379"
+
+# Base Network
+BASE_RPC_URL="https://mainnet.base.org"
+BASE_WS_URL="wss://mainnet.base.org"
+
+# Solana Network
+SOLANA_RPC_URL="https://api.mainnet-beta.solana.com"
+HELIUS_API_KEY="" # Optional: Enhanced RPC
+
+# Research Features
+ENABLE_HISTORICAL_SYNC="true"
+DATA_RETENTION_DAYS="90"
+ANALYSIS_INTERVAL_MS="60000"
+```
+
+## 📁 Project Structure
+
+```
+x402-observatory/
+├── app/                    # Next.js application
+│   ├── api/               # REST API endpoints
+│   ├── dashboard/         # Research dashboard
+│   └── docs/             # Documentation pages
+├── collectors/            # Blockchain data collectors
+│   ├── base/             # Base network collector
+│   └── solana/           # Solana network collector
+├── analyzers/            # Data analysis modules
+│   ├── patterns/         # Pattern recognition
+│   └── statistics/       # Statistical analysis
+├── lib/                  # Shared libraries
+│   ├── blockchain/       # Chain interaction
+│   └── database/         # Data access layer
+├── prisma/              # Database schema
+└── public/              # Static assets
+```
+
+## 🔍 Research Methodology
+
+### Data Collection
+- Monitor public blockchain transactions
+- Aggregate protocol deployment events
+- Track interaction patterns
+- Store historical data for analysis
+
+### Analysis Framework
+1. **Quantitative Analysis**: Statistical metrics and trends
+2. **Temporal Analysis**: Time-series protocol activity
+3. **Network Analysis**: Relationship mapping between addresses
+4. **Comparative Analysis**: Cross-protocol comparisons
+
+### Metrics Tracked
+- Protocol deployment frequency
+- Transaction volumes and patterns
+- User participation rates
+- Network distribution metrics
+- Adoption curve analysis
+
+## 📈 API Documentation
+
+### REST Endpoints
+
+```typescript
+GET /api/protocols           // List all tracked protocols
+GET /api/protocols/:id       // Protocol details
+GET /api/analytics/overview  // System-wide metrics
+GET /api/research/export     // Export research data
+POST /api/webhooks           // Register data webhooks
+```
+
+### WebSocket Streams
+
+```typescript
+ws://localhost:3000/stream/protocols  // Real-time protocol events
+ws://localhost:3000/stream/analytics  // Live analytics updates
+```
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+npm test
+
+# Unit tests
+npm run test:unit
+
+# Integration tests
+npm run test:integration
+
+# Data validation
+npm run test:validation
+```
+
+## 📊 Use Cases
+
+### Academic Research
+- Blockchain ecosystem studies
+- Protocol adoption patterns
+- Network effect analysis
+- Decentralized system dynamics
+
+### Market Analysis
+- Protocol competitiveness studies
+- Adoption rate tracking
+- Usage pattern analysis
+- Ecosystem health metrics
+
+### Educational Purpose
+- Learn blockchain fundamentals
+- Understand protocol mechanics
+- Study tokenomics
+- Research decentralized systems
+
+## 🚀 Deployment
+
+### Docker Deployment
+
+```bash
+# Build and run with Docker Compose
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+```
+
+### Production Deployment
+
+```bash
+# Build for production
+npm run build
+
+# Start production server
+npm start
+```
+
+## 📚 Documentation
+
+Comprehensive documentation available at `/docs` including:
+- Data collection methodology
+- Analysis algorithms
+- API reference
+- Research papers and findings
+
+## 🤝 Contributing
+
+We welcome contributions from researchers and developers:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/research-tool`)
+3. Commit your changes (`git commit -m 'Add research tool'`)
+4. Push to branch (`git push origin feature/research-tool`)
+5. Open a Pull Request
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## 📄 License
+
+This project is licensed under the MIT License - see [LICENSE](LICENSE) file.
+
+## 🎓 Academic Use
+
+If you use this platform in your research, please cite:
+```
+x402 Protocol Observatory (2024). Blockchain Research Platform.
+https://github.com/ChicoPanama/x402-Scanner
+```
+
+## ⚖️ Ethical Guidelines
+
+This platform is designed for legitimate research and educational purposes:
+- All data is publicly available on blockchain
+- No private information is collected
+- Transparent methodology and open source
+- Focus on understanding, not exploitation
+
+## 🙏 Acknowledgments
+
+- Blockchain research community
+- Open source contributors
+- Academic institutions using this platform
+- Base and Solana networks
+
+## 📞 Support
+
+- Documentation: [docs.x402observatory.org](https://docs.x402observatory.org)
+- Research Forum: [forum.x402observatory.org](https://forum.x402observatory.org)
+- Email: research@x402observatory.org
+
+---
+
+**Built for blockchain research and education** 🔬
