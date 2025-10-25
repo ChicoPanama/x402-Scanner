@@ -17,6 +17,8 @@
     "collect:hybrid": "tsx collectors/hybrid/index.ts",
     "analyze": "tsx scripts/analyze-x402-quality.ts",
     "analyze:db": "tsx scripts/analyze-database.ts",
+    "verify": "tsx scripts/verify-setup.ts",
+    "setup": "npm install && npx prisma generate && npx prisma db push",
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
     "prisma:studio": "prisma studio",
