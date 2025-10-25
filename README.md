@@ -6,6 +6,34 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
+## 🚀 Quick Start
+
+**New to this project?** → **[Read GETTING-STARTED.md](GETTING-STARTED.md)** for a step-by-step setup guide (takes ~10 minutes)
+
+```bash
+# 1. Install & Setup
+npm install
+cp .env.example .env
+# Edit .env with your database URL
+
+# 2. Initialize Database
+npx prisma generate && npx prisma db push
+
+# 3. Verify Setup
+npm run verify
+
+# 4. Start System (2 terminals)
+npm run dev              # Terminal 1: Web dashboard
+npm run collect:hybrid   # Terminal 2: Data collection
+
+# 5. Visit Dashboard
+# Open http://localhost:3000/dashboard
+```
+
+**Already set up?** Jump to [Usage](#-api-documentation) or [Research Tools](#-research--analysis)
+
+---
+
 ## 🔬 Overview
 
 The x402 Protocol Observatory is a blockchain research platform designed for monitoring and analyzing x402 protocol deployments across Base and Solana networks. This system aggregates publicly available blockchain data to provide researchers, academics, and market analysts with comprehensive insights into protocol dynamics and ecosystem development.
@@ -163,6 +191,62 @@ POST /api/webhooks           // Register data webhooks
 ws://localhost:3000/stream/protocols  // Real-time protocol events
 ws://localhost:3000/stream/analytics  // Live analytics updates
 ```
+
+## 🔬 Research & Analysis
+
+The Observatory includes powerful analysis tools for identifying high-quality protocols:
+
+### Quality Analyzers
+
+```bash
+# Analyze protocols from x402scan.com (fresh data)
+npm run analyze
+
+# Analyze protocols in your database (collected data)
+npm run analyze:db
+```
+
+Both tools score protocols 0-100 based on:
+- **Transaction volume** (0-30 points)
+- **Daily activity rate** (0-25 points)
+- **Recent activity** (0-20 points)
+- **Dollar volume** (0-25 points)
+
+### Signals Detected
+
+- **HIGH_VOLUME**: 100+ transactions
+- **WHALE_ACTIVITY**: Large transaction averages
+- **HOT_LAUNCH**: New protocols with strong traction
+- **VELOCITY_SPIKE**: Sudden activity increases
+- **VERY_ACTIVE**: 10+ transactions per day
+- **HOT**: Activity in the last hour
+
+### Recommendations Generated
+
+- 🔥 **CRITICAL**: Institutional interest detected
+- 🚀 **EARLY**: Strong initial traction
+- ⭐ **HIGH**: Strong metrics across the board
+- 👀 **MONITOR**: Shows promise
+- 📊 **RESEARCH**: Interesting patterns
+
+### Sample Output
+
+```
+🏆 TOP 10 PROTOCOLS BY QUALITY SCORE
+
+Rank | Address        | Chain  | Score | Txs   | $/Day | Signals
+----------------------------------------------------------------------
+ 1   | 0x1234...5678 | BASE   |  95  |   342 |  23.1 | HIGH_VOLUME, WHALE_ACTIVITY
+ 2   | 0xabcd...ef01 | BASE   |  87  |   198 |  15.2 | VERY_ACTIVE, HIGH_VALUE
+
+🔥 CRITICAL ATTENTION
+   0x1234...5678 (BASE)
+   Institutional interest detected
+
+📄 Exported to quality-report-2024-10-25.csv
+```
+
+**For detailed research methodology, see [RESEARCH.md](RESEARCH.md)**
 
 ## 🧪 Testing
 
