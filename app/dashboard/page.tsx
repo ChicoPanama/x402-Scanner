@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 
 interface Protocol {
@@ -46,16 +46,7 @@ export default function Dashboard() {
   const [filterChain, setFilterChain] = useState<string>('')
   const [autoRefresh, setAutoRefresh] = useState(true)
 
-  useEffect(() => {
-    fetchData()
-
-    if (autoRefresh) {
-      const interval = setInterval(fetchData, 10000) // Refresh every 10 seconds
-      return () => clearInterval(interval)
-    }
-  }, [filterChain, autoRefresh])
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const queryParams = new URLSearchParams()
       if (filterChain) queryParams.append('chain', filterChain)
@@ -79,7 +70,16 @@ export default function Dashboard() {
       console.error('Error fetching data:', error)
       setLoading(false)
     }
-  }
+  }, [filterChain])
+
+  useEffect(() => {
+    fetchData()
+
+    if (autoRefresh) {
+      const interval = setInterval(fetchData, 10000) // Refresh every 10 seconds
+      return () => clearInterval(interval)
+    }
+  }, [fetchData, autoRefresh])
 
   const formatAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`

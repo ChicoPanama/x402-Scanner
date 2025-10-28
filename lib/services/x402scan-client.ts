@@ -201,7 +201,7 @@ export class X402ScanClient {
   /**
    * Parse a protocol element from HTML
    */
-  private parseProtocolElement($: cheerio.CheerioAPI, elem: cheerio.Element): X402Protocol | null {
+  private parseProtocolElement($: ReturnType<typeof cheerio.load>, elem: cheerio.Element): X402Protocol | null {
     try {
       const $elem = $(elem)
 

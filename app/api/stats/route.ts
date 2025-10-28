@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
         activeProtocols,
         totalTransactions,
         recentProtocols,
-        chainBreakdown: chainStats.map((stat) => ({
+        chainBreakdown: chainStats.map((stat: { chain: string; _count: { _all: number } }) => ({
           chain: stat.chain,
           count: stat._count._all,
         })),
