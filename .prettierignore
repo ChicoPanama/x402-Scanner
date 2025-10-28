@@ -1,0 +1,34 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.next
+dist
+build
+out
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Coverage
+coverage
+
+# Database
+*.db
+*.sqlite
+
+# Generated files
+tsconfig.tsbuildinfo
+.prisma
+
+# Documentation
+*.md
