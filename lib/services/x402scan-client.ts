@@ -44,7 +44,7 @@ export class X402ScanClient {
       timeout: 10000,
       headers: {
         'User-Agent': 'x402-Observatory-Research-Bot/1.0 (Educational Research)',
-        'Accept': 'application/json, text/html',
+        Accept: 'application/json, text/html',
       },
     })
   }
@@ -107,16 +107,18 @@ export class X402ScanClient {
     // Handle different API response formats
     const items = Array.isArray(data) ? data : data.protocols || data.data || []
 
-    return items.map((item: any) => ({
-      address: item.address || item.contract || item.id,
-      chain: (item.chain || 'BASE').toUpperCase() as 'BASE' | 'SOLANA',
-      txHash: item.txHash || item.deploymentTx || item.tx,
-      deployer: item.deployer || item.creator || item.from,
-      timestamp: item.timestamp ? new Date(item.timestamp) : undefined,
-      name: item.name,
-      symbol: item.symbol,
-      metadata: item,
-    })).filter((p: X402Protocol) => p.address) // Only include items with addresses
+    return items
+      .map((item: any) => ({
+        address: item.address || item.contract || item.id,
+        chain: (item.chain || 'BASE').toUpperCase() as 'BASE' | 'SOLANA',
+        txHash: item.txHash || item.deploymentTx || item.tx,
+        deployer: item.deployer || item.creator || item.from,
+        timestamp: item.timestamp ? new Date(item.timestamp) : undefined,
+        name: item.name,
+        symbol: item.symbol,
+        metadata: item,
+      }))
+      .filter((p: X402Protocol) => p.address) // Only include items with addresses
   }
 
   /**
@@ -201,7 +203,7 @@ export class X402ScanClient {
   /**
    * Parse a protocol element from HTML
    */
-  private parseProtocolElement($: cheerio.CheerioAPI, elem: cheerio.Element): X402Protocol | null {
+  private parseProtocolElement($: ReturnType<typeof cheerio.load>, elem: any): X402Protocol | null {
     try {
       const $elem = $(elem)
 

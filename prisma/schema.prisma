@@ -8,6 +8,8 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // Connection pooling configuration
+  relationMode = "prisma"
 }
 
 // Blockchain networks supported
@@ -54,6 +56,9 @@ model Protocol {
   @@index([chain])
   @@index([status])
   @@index([createdAt])
+  @@index([lastActivityAt])
+  @@index([chain, status])
+  @@index([chain, createdAt])
 }
 
 // Transaction tracking
